@@ -93,7 +93,11 @@ def main():
     parser.add_argument("--seed",     type=int, default=7891)
     args = parser.parse_args()
 
-    df = pd.read_csv(args.data_csv)
+    try:
+        df = pd.read_csv(args.data_csv)
+    except ParserError:
+        # Some datasets in this repo are semicolon-delimited.
+        df = pd.read_csv(args.data_csv, sep=";")
     with open(args.states_file) as f:
         states = [l.strip() for l in f if l.strip()]
     print(f"Loaded {len(states)} states; CSV shape {df.shape}")
